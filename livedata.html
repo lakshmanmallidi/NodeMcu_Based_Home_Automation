@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <title>Myhome</title>
+
+		<style>
+			ul {
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				background-color: #333;
+			}
+
+			li {
+				float: left;
+			}
+
+			li a {
+				display: block;
+				color: white;
+				text-align: center;
+				padding: 14px 16px;
+				text-decoration: none;
+			}
+
+			li a:hover:not(.active) {
+				background-color: #111;
+			}
+
+			.active {
+				background-color: #4CAF50;
+			}
+		</style>
+		<script>
+			function initialize()
+			{
+			 sessionid=localStorage.getItem("myhome_sessionid");
+			 document.getElementById("myhomeid").href="myhome.html?sessionid="+sessionid;
+			 document.getElementById("livedataid").href="cameralive.html?sessionid="+sessionid;
+			}
+
+		</script>
+    </head>
+    <body onload="initialize()">
+		<nav>
+			<ul>
+			  <li><a id="myhomeid">Home</a></li>
+			  <li><a id="livedataid">Live Data</a></li>
+			  <li style="float:right"><a class="active" href="index.html">logout</a></li>
+			</ul>
+		</nav>
+		<h2 align="center">Motion sensor</h2>
+        <h3 align="center" id="sensordata1">0</h3>
+        <h2 align="center">Gas sensor</h2>
+        <h3 align="center" id="sensordata2">0</h3>
+        <script>
+            var myRequest;
+            function askserver()
+            {
+                if (window.XMLHttpRequest)
+                myRequest = new XMLHttpRequest();
+                else
+                myRequest = new ActiveXObject("Microsoft.XMLHTTP");
+				sessionid=localStorage.getItem("myhome_sessionid");
+                myRequest.open("GET","/getvalue?sessionid="+sessionid, true);
+                myRequest.send(null);
+                myRequest.onreadystatechange = getaverage;
+            }
+            function getaverage()
+            {
+                if (myRequest.readyState ===4)
+                {
+                if (myRequest.status === 200)
+                {
+                    var text = myRequest.responseText;
+					var splitedtext = text.split(",");
+					if(splitedtext[0]=="1")
+                    	document.getElementById('sensordata1').innerHTML="True";
+					else
+						document.getElementById('sensordata1').innerHTML="False";
+					document.getElementById('sensordata2').innerHTML=splitedtext[1];
+                }
+                }
+            }
+            window.setInterval(askserver,2000);
+        </script>
+    </body>
+</html>

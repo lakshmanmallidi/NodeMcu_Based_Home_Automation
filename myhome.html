@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Myhome</title>
+        <link rel="stylesheet" type="text/css" href="css/buttonstyle.css" />
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
+		<style>
+			ul {
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				background-color: #333;
+			}
+
+			li {
+				float: left;
+			}
+
+			li a {
+				display: block;
+				color: white;
+				text-align: center;
+				padding: 14px 16px;
+				text-decoration: none;
+			}
+
+			li a:hover:not(.active) {
+				background-color: #111;
+			}
+
+			.active {
+				background-color: #4CAF50;
+			}
+		</style>
+		<script type="text/javascript" src="js/myhomepage.js" data-silex-static=""></script>
+		<script type="text/javascript" src="js/buttons.js" data-silex-static=""></script>
+    </head>
+    <body onload="initialize()">
+		<nav>
+			<ul>
+				<li><a id="myhomeid">Home</a></li>
+				<li><a id="livedataid">Live Data</a></li>
+				<li><a id="s2tid">Voice Command</a></li>
+			  <li style="float:right"><a class="active" href="index.html">logout</a></li>
+			</ul>
+		</nav>
+		<div>	
+			<div class="switch demo4">
+				<input id="switch1" type="checkbox" onclick=sendButton("?switch1=pressed")>
+				<label><i class='icon-off'></i></label>
+			</div>
+			<label id="mylabel">LIGHT</label>
+			<div class="switch demo4">
+				<input id="switch2" type="checkbox" onclick=sendButton("?switch2=pressed")>
+				<label><i class='icon-off'></i></label>
+			</div>
+			<label id="mylabel">FAN</label>
+			<div class="switch demo4">
+				<input id="switch3" type="checkbox" onclick=sendButton("?switch3=pressed")>
+				<label><i class='icon-off'></i></label>
+			</div>
+			<label id="mylabel">MOTION SENSOR</label>
+			<div class="switch demo4">
+				<input id="switch4" type="checkbox" onclick=sendButton("?switch4=pressed")>
+				<label><i class='icon-off'></i></label>
+			</div>
+			<label id="mylabel">SMOKE SENSOR</label>
+			<style>
+				#mylabel{
+					display: block;
+					text-align: center;
+					line-height: 150%;
+					font-size: 1.5em;
+				}
+			</style>
+		</div>
+    </body>
+</html>

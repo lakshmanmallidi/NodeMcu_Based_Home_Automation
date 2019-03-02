@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>    
+        <title>Home Automation</title>
+        <style>
+            body {
+            background: #2d343d;
+            }
+
+            .login {
+            margin: 20px auto;
+            width: 300px;
+            padding: 30px 25px;
+            background: white;
+            border: 1px solid #c4c4c4;
+            }
+
+            .login-input {
+            width: 285px;
+            height: 50px;
+            margin-bottom: 25px;
+            padding-left:10px;
+            font-size: 15px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            }
+
+            .login-input:focus {
+                border-color:#6e8095;
+                outline: none;
+            }
+
+            .login-button {
+            width: 100%;
+            height: 50px;
+            padding: 0;
+            font-size: 20px;
+            color: #fff;
+            text-align: center;
+            background: #f0776c;
+            border: 0;
+            border-radius: 5px;
+            cursor: pointer; 
+            outline:0;
+            }
+
+            .login-lost{
+            text-align:center;
+            margin-bottom:0px;
+            }
+
+            .login-lost a{
+            color:#666;
+            text-decoration:none;
+            font-size:13px;
+            }
+        </style>
+        <script>
+            var myRequest;
+            function sendcredits(url)
+            {
+                if (window.XMLHttpRequest)
+                {
+                    myRequest = new XMLHttpRequest();
+                }
+                else
+                {
+                    myRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                if(localStorage.getItem("myhome_sessionid")!=null)
+                {
+                    url=url+"&"+"sessionid="+localStorage.getItem("myhome_sessionid");
+                }
+                myRequest.open("GET", url, true);
+                myRequest.send(null);
+                myRequest.onreadystatechange = gethomepage;	
+            }
+
+            function gethomepage()		
+            {
+        
+                if (myRequest.readyState ===4)		
+                {   
+
+                    if (myRequest.status === 200)
+                    {
+                        var text = myRequest.responseText;
+                        if(text!="loginerror")
+                        {
+                            document.location.href = text.split(" ")[0]+"?"+"sessionid="+text.split(" ")[1];
+                            localStorage.setItem("myhome_sessionid",text.split(" ")[1]);
+                        }
+                        else
+                        {
+                            document.getElementById("signin-error").innerHTML="<h5>INVALID USERNAME OR PASSWORD</h5>"
+                        }
+                    }
+                }
+            }
+        </script>
+    </head>
+
+    <body>
+        <div class="login">
+            <input type="text" required="" id="user" name="user" placeholder="Username" class="login-input" autofocus>
+            <input type="password" required="" id="pass" name="pass" placeholder="Password" class="login-input" autofocus>
+            <button class="login-button" onclick="validatelogin()">LOG IN</button>
+            <div id="signin-error" style="text-align: center;color: red;margin: 10px;"></div>
+        </div> 
+        <script type="text/javascript">
+            function validatelogin() 
+            {
+                var x1 = document.getElementById("user").value;
+                var x2 = document.getElementById("pass").value;
+                sendcredits("?username="+x1+"&"+"password="+x2)
+            }
+        </script>
+    </body>
+
+</html>
