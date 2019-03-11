@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 from random import choice
 from pyttsx3 import init
 from requests import post
-def send(msg, to):
+def sendsms(msg, to):
     data = {
       'Body': msg,
       'From': '+14254485583',
@@ -24,26 +24,32 @@ def nodemcu_getdata_thread():
         data = s.recv(30)
         s.close()
         a,b = map(int,data.decode().split(","))
-        if(a==1 and switch3 and (not pirflag)):
-            sendsms.send("Intrusion alert","9966333721")
+        if(a==0 and switch3 and (not pirflag)):
+            sendsms("Intrusion alert","7780315201")
             pir = "1"
             pirflag = True
         else:
-            pir = "0"
+            if(a==1):
+                pir = "0"
+            else:
+                pir = "1"
             pirflag = False
         if(b>250 and switch4):
-            sendsms.send("Fire alert","9966333721")
+            sendsms("Fire alert","7780315201")
             gas = str(b)
         else:
             gas = str(b)
         sleep(10)
         
 def speak(data):
-    engine=init()
-    engine.setProperty('rate',85)
-    engine.say(data)
-    engine.runAndWait()
-    engine.destroy()
+    try:
+        engine=init()
+        engine.setProperty('rate',85)
+        engine.say(data)
+        engine.runAndWait()
+    except Exception as e:
+        print(e)
+    
 def processparameters(client,variables,reqfile):
     global sessionids
     if(variables[0][0]=="username" and variables[1][0]=="password"):
@@ -100,10 +106,10 @@ def toggleswitch1():
         s = socket()
         s.connect((nodemcu_ip,nodemcu_port))
         if(switch1):
-            speak("lighs on")
+            Thread(target=speak,args=("lights on",)).start()
             s.send(b'switch1_on')
         else:
-            speak("lights off")
+            Thread(target=speak,args=("lights off",)).start()
             s.send(b'switch1_off')
         s.close()
     except Exception as e:
@@ -116,10 +122,10 @@ def toggleswitch2():
         s = socket()
         s.connect((nodemcu_ip,nodemcu_port))
         if(switch2):
-            speak("Fan on")
+            Thread(target=speak,args=("Fan on",)).start()
             s.send(b'switch2_on')
         else:
-            speak("Fan off")
+            Thread(target=speak,args=("Fan off",)).start()
             s.send(b'switch2_off')
         s.close()
     except Exception as e:
@@ -128,16 +134,16 @@ def toggleswitch3():
     global switch3
     switch3 = not switch3
     if(switch3):
-        speak("sms alert for intrusion detection is turned on")
+        Thread(target=speak,args=("sms alert for intrusion detection is turned on",)).start()
     else:
-        speak("sms alert for intrusion detection is turned off")
+        Thread(target=speak,args=("sms alert for intrusion detection is turned off",)).start()
 def toggleswitch4():
     global switch4
     switch4 = not switch4
     if(switch4):
-        speak("sms alert for gas sensor is turned on")
+        Thread(target=speak,args=("sms alert for gas sensor is turned on",)).start()
     else:
-        speak("sms alert for gas sensor is turned off")
+        Thread(target=speak,args=("sms alert for gas sensor is turned off",)).start()
 def mainthread(client,addr):
     try:
         print('Got connection from', addr[0],addr[1],"\n")  #printing 1
@@ -187,6 +193,7 @@ if __name__=="__main__":
     username="myhome"
     password="sweethome"
     sessionids=[]
+    
     s=socket()
     ip=input('Enter server ip address:')
     nodemcu_ip=input('Enter NodeMcu ip address:')
