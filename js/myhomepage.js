@@ -4,6 +4,7 @@ function initialize()
  sessionid=localStorage.getItem("myhome_sessionid");
  document.getElementById("myhomeid").href="myhome.html?sessionid="+sessionid;
  document.getElementById("livedataid").href="livedata.html?sessionid="+sessionid;
+ document.getElementById("s2tid").href="voiceRecognition.html?sessionid="+sessionid;
  if (window.XMLHttpRequest)
  {
   myRequest = new XMLHttpRequest();
@@ -26,7 +27,7 @@ function getbuttonstate()
   {
 	   var text = myRequest.responseText;
 	   statusarray=text.split(" ");
-	   for(var i=0;i<6;i++)
+	   for(var i=0;i<4;i++)
 	   {
 		   if(statusarray[i]=="True")
 		   {

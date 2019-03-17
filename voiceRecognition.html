@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Myhome</title>
+        <link rel="stylesheet" type="text/css" href="css/buttonstyle.css" />
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
+		<style>
+			ul {
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				background-color: #333;
+			}
+
+			li {
+				float: left;
+			}
+
+			li a {
+				display: block;
+				color: white;
+				text-align: center;
+				padding: 14px 16px;
+				text-decoration: none;
+			}
+
+			li a:hover:not(.active) {
+				background-color: #111;
+			}
+
+			.active {
+				background-color: #4CAF50;
+			}
+		</style>
+		<script>
+			function initialize()
+			{
+			 sessionid=localStorage.getItem("myhome_sessionid");
+			 document.getElementById("myhomeid").href="myhome.html?sessionid="+sessionid;
+			 document.getElementById("livedataid").href="cameralive.html?sessionid="+sessionid;
+			 document.getElementById("s2tid").href="voiceRecognition.html?sessionid="+sessionid;
+			}
+		</script>
+		<script type="text/javascript" src="js/buttons.js" data-silex-static=""></script>
+    </head>
+    <body onload="initialize()">
+		<nav>
+			<ul>
+				<li><a id="myhomeid">Home</a></li>
+				<li><a id="livedataid">Live Data</a></li>
+				<li><a id="s2tid">Voice Command</a></li>
+			  <li style="float:right"><a class="active" href="index.html">logout</a></li>
+			</ul>
+		</nav>
+		<div>	
+			<div class="switch demo4">
+				<input id="listenButton" type="checkbox" onclick=listen()>
+				<label><i class='icon-off'></i></label>
+			</div>
+			<label id="mylabel">LISTEN</label>			
+			<style>
+				#mylabel{
+					display: block;
+					text-align: center;
+					line-height: 150%;
+					font-size: 1.5em;
+				}
+            </style>
+            <script>
+                var myRequest;
+                var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
+                recognition.lang = 'en-US';
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 5;
+                function send(url)
+                {
+                    if (window.XMLHttpRequest)
+                        myRequest = new XMLHttpRequest();
+                    else
+                        myRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                    myRequest.open("GET", url, true);
+                    myRequest.send(null);
+                }
+                function listen()
+                {
+                    document.getElementById("listenButton").checked=true;
+                    document.getElementById("listenButton").disabled = true;
+                    recognition.start();
+                }
+                recognition.onresult = function(event) 
+                {
+					var cmd = event.results[0][0].transcript;
+                    if(cmd == "lights on" || cmd == "lights off")
+                        send("?switch1=pressed");
+                    else if(cmd == "fan on" || cmd == "fan off")
+                        send("?switch2=pressed");
+                    else if(cmd == "intrusion sensor on" || cmd == "intrusion sensor off")
+                        send("?switch3=pressed");
+                    else if(cmd == "smoke sensor on" || cmd == "smoke sensor off")
+                        send("?switch4=pressed");
+                    document.getElementById("listenButton").checked=false;
+					document.getElementById("listenButton").disabled =false;
+                };
+            </script>
+		</div>
+    </body>
+</html>
+
+
+
+
+
+

@@ -40,8 +40,8 @@
 			 sessionid=localStorage.getItem("myhome_sessionid");
 			 document.getElementById("myhomeid").href="myhome.html?sessionid="+sessionid;
 			 document.getElementById("livedataid").href="cameralive.html?sessionid="+sessionid;
+			 document.getElementById("s2tid").href="voiceRecognition.html?sessionid="+sessionid;
 			}
-
 		</script>
     </head>
     <body onload="initialize()">
@@ -49,6 +49,7 @@
 			<ul>
 			  <li><a id="myhomeid">Home</a></li>
 			  <li><a id="livedataid">Live Data</a></li>
+			  <li><a id="s2tid">Voice Command</a></li>
 			  <li style="float:right"><a class="active" href="index.html">logout</a></li>
 			</ul>
 		</nav>
